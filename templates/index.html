@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #b2c7ec;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: #e7c0c0;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="text"], input[type="password"], input[type="email"], textarea, input[type="number"], input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1f60b6;
+            color: rgb(253, 251, 251);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .success {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .notification {
+            margin-bottom: 20px;
+        }
+        #schedule_options {
+            padding-left: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Send Email</h2>
+        
+        <!-- Notification section -->
+        <div class="notification">
+            <div class="success" id="successMessage">
+                Email has been sent successfully!
+            </div>
+            <div class="error" id="errorMessage">
+                There was an error sending the email.
+            </div>
+        </div>
+
+        <form method="POST" action="/send_email" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="sender_email">Sender Email:</label>
+                <input type="email" id="sender_email" name="sender_email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="sender_password">Sender Password:</label>
+                <input type="password" id="sender_password" name="sender_password" required>
+            </div>
+
+            <div class="input-group">
+                <label for="recipient_email">Recipient Email:</label>
+                <input type="email" id="recipient_email" name="recipient_email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+
+            <div class="input-group">
+                <label for="body">Body:</label>
+                <textarea id="body" name="body" rows="5" required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="cc">CC:</label>
+                <input type="text" id="cc" name="cc">
+            </div>
+
+            <div class="input-group">
+                <label for="bcc">BCC:</label>
+                <input type="text" id="bcc" name="bcc">
+            </div>
+
+            <div class="input-group">
+                <label for="attachments">Attachments:</label>
+                <input type="file" id="attachments" name="attachments" multiple>
+            </div>
+
+            <div class="input-group">
+                <label for="schedule_email">Schedule Email:</label>
+                <input type="checkbox" id="schedule_email" name="schedule_email">
+            </div>
+
+            <div id="schedule_options" style="display:none;">
+                <label for="scheduled_time">Select Date and Time to Schedule:</label>
+                <input type="datetime-local" id="scheduled_time" name="scheduled_time" min="{{ current_time }}" required>
+            </div>
+
+            <button type="submit">Send Email</button>
+        </form>
+    </div>
+
+    <script>
+        // Toggle schedule options visibility
+        document.getElementById('schedule_email').addEventListener('change', function () {
+            var scheduleOptions = document.getElementById('schedule_options');
+            if (this.checked) {
+                scheduleOptions.style.display = 'block';
+            } else {
+                scheduleOptions.style.display = 'none';
+            }
+        });
+
+        // JavaScript to display notifications based on success or failure
+        function showNotification(isSuccess) {
+            var successMessage = document.getElementById('successMessage');
+            var errorMessage = document.getElementById('errorMessage');
+            
+            if (isSuccess) {
+                successMessage.style.display = 'block';
+                setTimeout(() => successMessage.style.display = 'none', 5000); // Hide after 5 seconds
+            } else {
+                errorMessage.style.display = 'block';
+                setTimeout(() => errorMessage.style.display = 'none', 5000); // Hide after 5 seconds
+            }
+        }
+
+        // Example: Uncomment to test the notifications
+        // showNotification(true); // To show success message
+        // showNotification(false); // To show error message
+    </script>
+
+</body>
+</html>
