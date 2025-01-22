@@ -22,7 +22,7 @@ BIN_DIR = "bin"
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'xlsx'}
 
 # VirusTotal API URL and your API key (replace with your actual API key)
-VIRUSTOTAL_API_KEY = 'your_virustotal_api_key'
+VIRUSTOTAL_API_KEY = 'eb012464c1f37d720b66fc29e055515e5f9c1f930b815f9f33e003a366caf141'
 VIRUSTOTAL_URL = 'https://www.virustotal.com/api/v3/files/'
 
 @app.route('/')
