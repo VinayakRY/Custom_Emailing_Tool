@@ -30,158 +30,149 @@
             margin-bottom: 5px;
             display: block;
         }
-        input[type="text"], input[type="password"], input[type="email"], textarea, input[type="number"], input[type="datetime-local"] {
+        input, textarea, button, select {
             width: 100%;
             padding: 12px;
-            margin: 8px 0 15px 0;
+            margin: 8px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
         }
-        input[type="file"] {
-            margin-bottom: 15px;
-        }
         button {
-            width: 100%;
-            padding: 12px;
             background-color: #1f60b6;
-            color: rgb(253, 251, 251);
+            color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
         }
         button:hover {
             background-color: #45a049;
         }
-        .success {
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            margin-top: 20px;
-            display: none;
-        }
-        .error {
-            background-color: #dc3545;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            margin-top: 20px;
-            display: none;
-        }
-        .notification {
+        .alert {
+            padding: 15px;
             margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
         }
-        #schedule_options {
-            padding-left: 20px;
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
         }
-        .input-group {
-            margin-bottom: 20px;
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .suggestions {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        ul{
+            color: #45a049;
+        }
+        #fileScanNotification
+        {
+            color: #155724;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h2>Send Email</h2>
-        
-        <!-- Notification section -->
-        <div class="notification">
-            <div class="success" id="successMessage">
-                Email has been sent successfully!
-            </div>
-            <div class="error" id="errorMessage">
-                There was an error sending the email.
-            </div>
-        </div>
 
-        <form method="POST" action="/send_email" enctype="multipart/form-data">
-            <div class="input-group">
-                <label for="sender_email">Sender Email:</label>
-                <input type="email" id="sender_email" name="sender_email" required>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+            <div id="fileScanNotification" class="alert" style="display: block">
+                {{ scan_notification }}
             </div>
-
-            <div class="input-group">
-                <label for="sender_password">Sender Password:</label>
-                <input type="password" id="sender_password" name="sender_password" required>
-            </div>
-
-            <div class="input-group">
-                <label for="recipient_email">Recipient Email:</label>
-                <input type="email" id="recipient_email" name="recipient_email" required>
-            </div>
-
-            <div class="input-group">
-                <label for="subject">Subject:</label>
-                <input type="text" id="subject" name="subject" required>
-            </div>
-
-            <div class="input-group">
-                <label for="body">Body:</label>
-                <textarea id="body" name="body" rows="5" required></textarea>
-            </div>
-
-            <div class="input-group">
-                <label for="cc">CC:</label>
-                <input type="text" id="cc" name="cc">
-            </div>
-
-            <div class="input-group">
-                <label for="bcc">BCC:</label>
-                <input type="text" id="bcc" name="bcc">
-            </div>
-
-            <div class="input-group">
-                <label for="attachments">Attachments:</label>
-                <input type="file" id="attachments" name="attachments" multiple>
-            </div>
-
-            <div class="input-group">
-                <label for="schedule_email">Schedule Email:</label>
-                <input type="checkbox" id="schedule_email" name="schedule_email">
-            </div>
-
-            <div id="schedule_options" style="display:none;">
-                <label for="scheduled_time">Select Date and Time to Schedule:</label>
-                <input type="datetime-local" id="scheduled_time" name="scheduled_time" min="{{ current_time }}" required>
-            </div>
-
-            <button type="submit">Send Email</button>
-        </form>
-    </div>
-
+          <form method="POST" action="/send_email" enctype="multipart/form-data">
+              <label for="sender_email">Sender Email:</label>
+              <input type="email" id="sender_email" name="sender_email" required>
+  
+              <label for="sender_password">Sender Password:</label>
+              <input type="password" id="sender_password" name="sender_password" required>
+  
+              <label for="recipient_email">Recipient Email:</label>
+              <input type="email" id="recipient_email" name="recipient_email" required>
+  
+              <label for="subject">Subject:</label>
+              <input type="text" id="subject" name="subject" required>
+  
+              <label for="body">Body:</label>
+              <textarea id="body" name="body" rows="5" required></textarea>
+              <div id="realTimeSuggestions" class="suggestions"></div>
+  
+              <label for="cc">CC:</label>
+              <input type="text" id="cc" name="cc">
+  
+              <label for="bcc">BCC:</label>
+              <input type="text" id="bcc" name="bcc">
+  
+              <label for="attachments">Attachments:</label>
+              <input type="file" id="attachments" name="attachments" multiple onchange="scanFile()">
+  
+              <label for="schedule_email">Schedule Email:</label>
+              <input type="checkbox" id="schedule_email" name="schedule_email">
+              <div id="schedule_options" style="display: none;">
+                  <label for="scheduled_time">Select Date and Time:</label>
+                  <input type="datetime-local" id="scheduled_time" name="scheduled_time" min="{{ current_time }}">
+              </div>
+  
+              <button type="submit">Send Email</button>
+          </form>
+      </div>
+  
     <script>
-        // Toggle schedule options visibility
+        // Show/hide scheduling options
         document.getElementById('schedule_email').addEventListener('change', function () {
-            var scheduleOptions = document.getElementById('schedule_options');
-            if (this.checked) {
-                scheduleOptions.style.display = 'block';
-            } else {
-                scheduleOptions.style.display = 'none';
-            }
+            const scheduleOptions = document.getElementById('schedule_options');
+            scheduleOptions.style.display = this.checked ? 'block' : 'none';
         });
 
-        // JavaScript to display notifications based on success or failure
-        function showNotification(isSuccess) {
-            var successMessage = document.getElementById('successMessage');
-            var errorMessage = document.getElementById('errorMessage');
-            
-            if (isSuccess) {
-                successMessage.style.display = 'block';
-                setTimeout(() => successMessage.style.display = 'none', 5000); // Hide after 5 seconds
-            } else {
-                errorMessage.style.display = 'block';
-                setTimeout(() => errorMessage.style.display = 'none', 5000); // Hide after 5 seconds
-            }
+
+    // Real-time Grammar and Spelling Check
+
+    const bodyInput = document.getElementById('body');
+    const realTimeSuggestions = document.getElementById('realTimeSuggestions');
+
+    bodyInput.addEventListener('input', async () => {
+        const text = bodyInput.value;
+
+        if (text.trim().length === 0) {
+            realTimeSuggestions.textContent = '';
+            return;
         }
 
-        // Example: Uncomment to test the notifications
-        // showNotification(true); // To show success message
-        // showNotification(false); // To show error message
-    </script>
+        const response = await fetch('/check_grammar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+        });
 
+        const result = await response.json();
+        if (result.status === 'success') {
+            if (result.corrections.length > 0) {
+                realTimeSuggestions.innerHTML = `
+                    <strong>Corrections:</strong><br>
+                    ${result.corrections.map(c => `${c.original} → ${c.corrected.join(', ')}`).join('<br>')}
+                `;
+            } else {
+                realTimeSuggestions.textContent = 'No grammar issues found.';
+            }
+        } else {
+            realTimeSuggestions.textContent = 'Error checking grammar and spelling.';
+        }
+    });
+    </script>
 </body>
 </html>
