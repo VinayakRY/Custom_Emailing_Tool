@@ -98,13 +98,13 @@ Contributions are welcome! To contribute:
 ---
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ---
 
 ## Contact
 For questions or support, feel free to contact **Vinayak Rathore**:
-- Email: [your_email@gmail.com](mailto:your_email@gmail.com)
+- Email: [socialcontact121@gmail.com](mailto:socialcontact121@gmail.com)
 - LinkedIn: [Vinayak Rathore](https://www.linkedin.com/in/vinayak-rathore)
 
 ---
