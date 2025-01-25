@@ -1,9 +1,11 @@
+googletrans==4.0.0-rc1
+httpx==0.13.3   # other dependencies...
 asgiref==3.6.0
 Babel==2.10.3
 blinker==1.5
 certifi==2022.9.24
-chardet==5.1.0
-charset-normalizer>=2,<3
+chardet==3.0.4
+charset-normalizer<3,>=2
 click==8.1.3
 colorama==0.4.6
 cryptography==38.0.4
@@ -12,7 +14,7 @@ filelock==3.9.0
 Flask==2.2.2
 Flask-Cors==5.0.0
 greenlet==2.0.2
-idna==3.3
+idna==2.10 # Kept as is
 itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
@@ -28,5 +30,4 @@ SQLAlchemy==1.4.46
 urllib3==1.26.12
 virtualenv==20.17.1
 Werkzeug==2.2.2
-gunicorn>=20.0.4
-googletrans==4.0.0-rc1
+gunicorn==23.0.0
