@@ -26,5 +26,5 @@ simplejson==3.18.3
 six==1.16.0
 SQLAlchemy==1.4.46
 urllib3==1.26.12
-virtualenv==20.17.1
+virtualenv==20.17.1+ds
 Werkzeug==2.2.2
