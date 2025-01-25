@@ -46,6 +46,11 @@ def send_email_route():
         bcc = request.form.get('bcc', '')
         scheduled_time = request.form.get('scheduled_time')
 
+         # Validate that at least one recipient is provided
+        if not recipient_email and not cc and not bcc:
+            flash("Please provide at least one recipient: To, CC, or BCC.", "error")
+            return redirect(url_for('index'))
+
         files = request.files.getlist('attachments')
         attachments = []
         scan_notification = ""
@@ -81,6 +86,7 @@ def send_email_route():
         else:
             send_email(sender_email, sender_password, email_msg)
             flash("Email sent successfully!", "success")
+            os.remove(file_path)
 
         return redirect(url_for('index', scan_notification=scan_notification))
 
@@ -166,13 +172,32 @@ def fetch_emails():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
 
+@app.route('/translate_text', methods=['POST'])
+def translate_text_route():
+    data = request.get_json()
+    text = data.get('text', '')
+    target_lang = data.get('target_lang', '')
+
+    if not text or not target_lang:
+        return jsonify({'status': 'error', 'message': 'Invalid input'}), 400
+
+    try:
+        translated_text = translate_text(text, target_lang)
+        return jsonify({'status': 'success', 'translated_text': translated_text})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 def translate_text(text, target_lang):
+    """
+    Translates the given text into the target language using googletrans.
+    """
     try:
         translated = translator.translate(text, dest=target_lang)
         return translated.text
     except Exception as e:
         return str(e)
+
 
 
 def check_virustotal_report(file_id):
@@ -255,6 +280,7 @@ def send_email(sender_email, sender_password, email_message):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(sender_email, sender_password)
         server.send_message(email_message)
+        #os.remove(file_path)
 
 
 def schedule_email(sender_email, sender_password, email_message, delay_in_seconds):
