@@ -64,7 +64,7 @@ def send_email_route():
                 scan_result = scan_with_virustotal(file_path)
                 if scan_result == "File is safe":
                     attachments.append(file_path)
-                    scan_notification = f"File {file.filename} is safe to attach."
+                    flash("File is safe to attach.")
                 else:
                     scan_notification = f"Malware detected in file {file.filename}. Email not sent."
                     flash(scan_notification, "error")
