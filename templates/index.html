@@ -112,6 +112,9 @@
               <textarea id="body" name="body" rows="5" required></textarea>
               <div id="realTimeSuggestions" class="suggestions"></div>
 
+               <!-- Voice to Text Button -->
+              <!-- <button type="button" id="voice_to_text_button">🎤 Speak Now</button> -->
+
               <label for="translate_language">Translate Body to:</label>
               <select id="translate_language" name="translate_language">
                   <option value="en">English</option>
@@ -193,6 +196,32 @@
             const scheduleOptions = document.getElementById('schedule_options');
             scheduleOptions.style.display = this.checked ? 'block' : 'none';
         });
+
+    
+    
+    //     // Voice to text functionality
+    //     document.getElementById('voice_to_text_button').addEventListener('click', function() { 
+    //     if (!('webkitSpeechRecognition' in window)) {
+    //         alert("Your browser doesn't support Speech Recognition.");
+    //         return;
+    //     }
+ 
+    //     const recognition = new webkitSpeechRecognition();
+    //     recognition.lang = 'en-US';
+    //     recognition.interimResults = false;
+    //     recognition.maxAlternatives = 1;
+
+    //     recognition.start();
+
+    //     recognition.onresult = function(event) {
+    //         const speechResult = event.results[0][0].transcript;
+    //         document.getElementById('body').value += speechResult; // Append speech result to body text area
+    //     };
+
+    //     recognition.onerror = function(event) {
+    //         alert('Speech recognition error: ' + event.error);
+    //     };
+    // });
 
 
     // Real-time Grammar and Spelling Check
